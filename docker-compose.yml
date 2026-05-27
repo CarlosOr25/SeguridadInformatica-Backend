@@ -1,0 +1,48 @@
+# 1 Backend (NestJS) + 1 Base de datos (PostgreSQL), como en el diseño.
+#
+#   docker compose up db       -> sólo la base de datos (para `npm run start:dev` local)
+#   docker compose up --build  -> backend + base de datos completos
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: k11box-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: mediafiredb
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U root -d mediafiredb']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: k11box-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: mediafiredb
+      JWT_SECRET: cambia_esto_por_un_secreto_largo_y_aleatorio
+      PORT: 3000
+    ports:
+      - '3000:3000'
+    volumes:
+      - uploads:/app/uploads
+      - keys:/app/keys
+
+volumes:
+  pgdata:
+  uploads:
+  keys:

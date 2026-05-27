@@ -6,6 +6,9 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
+import { CryptoModule } from './crypto/crypto.module';
+import { DirectoriesModule } from './directories/directories.module';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
   imports: [
@@ -27,8 +30,11 @@ import { FilesModule } from './files/files.module';
         synchronize: true,
       }),
     }),
+    CryptoModule,
+    ActivityModule,
     UsersModule,
     AuthModule,
+    DirectoriesModule,
     FilesModule,
   ],
   controllers: [AppController],

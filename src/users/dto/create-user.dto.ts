@@ -1,6 +1,11 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUserDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  name?: string;
+
   @IsEmail({}, { message: 'El correo debe tener un formato válido' })
   email!: string;
 
